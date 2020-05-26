@@ -1,30 +1,38 @@
 const mainContainer = document.querySelector('.main-grid-container')
 const modalContainer = document.querySelector('.overlay')
+const modal = document.querySelector('.modal-window')
+let employees = []
 
-
-fetch('https://randomuser.me/api/?results=12&nat=au,fi,nz,us')
+fetch('https://randomuser.me/api/?results=12&nat=us')
     .then(response => response.json())
     //.then(data => console.log(data))
     .then(data => {
         generateCard(data)
-        generateModal(data)
+        //generateModal(data)
     })    
 
+
+
 function generateCard(data) {
-    for (let i=0; i<data.results.length; i++) {
-        const card = document.createElement('div')
-        card.classList.add('card-container')
-        card.setAttribute('data-index', i)
-        card.innerHTML = `
-            <img class="thumbnail" src="${data.results[i].picture.large}">
+    employees = data.results
+    let html = ''
+    employees.forEach((employee, index) => {
+        let name = employee.name
+        let email = employee.email
+        let city = employee.location.city
+        let picture = employee.picture.large
+        html += `
+        <div class="card-container" data-index="${index}">
+            <img class="thumbnail" src="${picture}">
             <div class="employee-info">
-                <h3 class="name">${data.results[i].name.first} ${data.results[i].name.last}</h3>
-                <p>${data.results[i].email}</p>
-                <p>${data.results[i].location.city}</p>
+                <h3 class="name">${name.first} ${name.last}</h3>
+                <p>${email}</p>
+                <p>${city}</p>
             </div>
+        </div>
         `
-        mainContainer.appendChild(card)
-    }
+    })
+    mainContainer.innerHTML = html
 }
 
 /* 
@@ -36,40 +44,46 @@ Modal functionality:
     have a close modal button/window click to close? 
 */
 
-function generateModal(data) {
-    for (let i=0; i<data.results.length; i++) {
-        const modal = document.createElement('div')
-        modal.classList.add('modal-window')
-        modal.innerHTML = `
-            <div class="close-flex">
-                <p class="modal-close">X</p>
-            </div>
-            <div class="main-modal-info">
-                <img class="modal-img" src="${data.results[i].picture.large}">
-                <h3 class="name">${data.results[i].name.first} ${data.results[i].name.last}</h3>
-                <p>${data.results[i].email}</p>
-                <p>${data.results[i].location.city}</p>
-            </div>
-            <div class="additional-modal-info">
-                <p>${data.results[i].cell}</p>
-                <p>${data.results[i].location.street.number} ${data.results[i].location.street.name} ${data.results[i].location.city}, ${data.results[i].location.country}</p>
-                <p>Birthday: ${data.results[i].dob.date.substr(5, 2)}${data.results[i].dob.date.substr(7, 3)}-${data.results[i].dob.date.substr(0, 4)}</p>
-            </div>
-        `
-        modalContainer.appendChild(modal)
+function generateModal(index) {
+    let {name, dob, phone, email, location: {city, street, state, postcode}, picture} = employees[index]
+    let date = new Date(dob.date)
+    const html = `
+        <div class="close-flex">
+            <p class="modal-close">X</p>
+        </div>
+        <div class="main-modal-info">
+            <img class="modal-img" src="${picture.large}">
+            <h3 class="name">${name.first} ${name.last}</h3>
+            <p>${email}</p>
+            <p>${city}</p>
+        </div>
+        <div class="additional-modal-info">
+            <p>${phone}</p>
+            <p>${street.number} ${street.name} ${city}, ${state} ${postcode}</p>
+            <p>Birthday: ${date.getMonth()}/${date.getDate()}/${date.getFullYear()}</p>
+        </div>
+    `
+    modal.innerHTML = html
+    modal.setAttribute('data-index', `${index}`)
+    if (index == 0) {
+        $(".modal-left").hide()
+    } else if (index == 11) {
+        $(".modal-right").hide()
+    } else {
+        $(".modal-left").show()
+        $(".modal-right").show()
     }
+    modalContainer.style.display = 'block'
 }
 
-// $(".main-grid-container").click(() => {
-//     console.log('clicked')
-//     console.log($(this).index('.card-container'))
-// })
-
-$(document).on('click', '.card-container', (e) => {
-    
-    console.log("clicked")
-    console.log(e.target.getAttribute('data-index'))
+mainContainer.addEventListener('click', (e) => {
+    if (e.target !== mainContainer) {
+        const card = e.target.closest('.card-container')
+        const index = card.getAttribute('data-index')
+        generateModal(index)
+    }
 })
+
 
 $(document).on('click', ".modal-close", () => {
     $(".overlay").hide()
@@ -79,8 +93,6 @@ $(document).on('click', ".modal-close", () => {
 $(".search-bar").keyup(() => {
     const input = $('.search-bar').val().toLowerCase()
     const cards = document.querySelectorAll('.card-container')
-    console.log(cards)
-    console.log(cards[0].children[1].children[0])
     for (let i=0; i<cards.length; i++) {
         if (!cards[i].children[1].children[0].textContent.toLowerCase().includes(input)) {
             cards[i].classList.add('hide')

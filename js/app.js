@@ -2,7 +2,7 @@ const mainContainer = document.querySelector('.main-grid-container')
 const modalContainer = document.querySelector('.overlay')
 
 
-fetch('https://randomuser.me/api/?results=12&nat=au,es,fi,fr,nz,us')
+fetch('https://randomuser.me/api/?results=12&nat=au,fi,nz,us')
     .then(response => response.json())
     //.then(data => console.log(data))
     .then(data => {
@@ -62,7 +62,7 @@ function generateModal(data) {
 $(document).on('click', ".card-container", () => {
     
     console.log("clicked")
-    console.log($(this).index())
+    console.log($(this).index('.card-container'))
 })
 
 $(document).on('click', ".modal-close", () => {
@@ -71,32 +71,17 @@ $(document).on('click', ".modal-close", () => {
 
 
 $(".search-bar").keyup(() => {
+    const input = $('.search-bar').val().toLowerCase()
     const cards = document.querySelectorAll('.card-container')
     console.log(cards)
     console.log(cards[0].children[1].children[0])
     for (let i=0; i<cards.length; i++) {
-        if (!cards[i].children[1].children[0].textContent.toLowerCase().includes($(".search-bar").val().toLowerCase())) {
+        if (!cards[i].children[1].children[0].textContent.toLowerCase().includes(input)) {
             cards[i].classList.add('hide')
         }
+        if (input === '') {
+            cards[i].classList.remove('hide')
+        }
     }
-    // cards.forEach((element), () => {
-    //     if (element.children[1].children[0].value.toLowerCase() !== $(".search-bar").val().toLowerCase()) {
-    //         element.hide()
-    //     }
-    // })
 })
 
-// $(".search-bar").keyup((event) => {
-//     const searchTerm = event.target.value.toLowerCase()
-//     if (searchTerm === '') {
-//         $('card-container').removeClass('hidden')
-//         return
-//     }
-//     $(".card-container").filter(() => {
-//         if ($(this).children[1].children[0].val().toLowerCase().includes(searchTerm)) {
-//             $(this).removeClass('hidden')
-//         } else {
-//             $(this).addClass('hidden')
-//         }
-//     })
-// })

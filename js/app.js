@@ -14,6 +14,7 @@ function generateCard(data) {
     for (let i=0; i<data.results.length; i++) {
         const card = document.createElement('div')
         card.classList.add('card-container')
+        card.setAttribute('data-index', i)
         card.innerHTML = `
             <img class="thumbnail" src="${data.results[i].picture.large}">
             <div class="employee-info">
@@ -59,10 +60,15 @@ function generateModal(data) {
     }
 }
 
-$(document).on('click', ".card-container", () => {
+// $(".main-grid-container").click(() => {
+//     console.log('clicked')
+//     console.log($(this).index('.card-container'))
+// })
+
+$(document).on('click', '.card-container', (e) => {
     
     console.log("clicked")
-    console.log($(this).index('.card-container'))
+    console.log(e.target.getAttribute('data-index'))
 })
 
 $(document).on('click', ".modal-close", () => {

@@ -78,6 +78,10 @@ header {
     margin-right: 30px;
 }
 
+.hide {
+    display: none;
+}
+
 /*******************************
           MODAL STYLES
 *******************************/

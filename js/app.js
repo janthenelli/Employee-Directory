@@ -72,9 +72,31 @@ $(document).on('click', ".modal-close", () => {
 
 $(".search-bar").keyup(() => {
     const cards = document.querySelectorAll('.card-container')
-    cards.forEach(() => {
-        if ($(this).children[1].children[0].val().toLowerCase() !== $(".search-bar").val().toLowerCase()) {
-            $(this).hide()
+    console.log(cards)
+    console.log(cards[0].children[1].children[0])
+    for (let i=0; i<cards.length; i++) {
+        if (!cards[i].children[1].children[0].textContent.toLowerCase().includes($(".search-bar").val().toLowerCase())) {
+            cards[i].classList.add('hide')
         }
-    })
+    }
+    // cards.forEach((element), () => {
+    //     if (element.children[1].children[0].value.toLowerCase() !== $(".search-bar").val().toLowerCase()) {
+    //         element.hide()
+    //     }
+    // })
 })
+
+// $(".search-bar").keyup((event) => {
+//     const searchTerm = event.target.value.toLowerCase()
+//     if (searchTerm === '') {
+//         $('card-container').removeClass('hidden')
+//         return
+//     }
+//     $(".card-container").filter(() => {
+//         if ($(this).children[1].children[0].val().toLowerCase().includes(searchTerm)) {
+//             $(this).removeClass('hidden')
+//         } else {
+//             $(this).addClass('hidden')
+//         }
+//     })
+// })

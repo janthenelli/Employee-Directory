@@ -5,13 +5,9 @@ let employees = []
 
 fetch('https://randomuser.me/api/?results=12&nat=us')
     .then(response => response.json())
-    //.then(data => console.log(data))
     .then(data => {
         generateCard(data)
-        //generateModal(data)
     })    
-
-
 
 function generateCard(data) {
     employees = data.results
@@ -34,15 +30,6 @@ function generateCard(data) {
     })
     mainContainer.innerHTML = html
 }
-
-/* 
-Modal functionality: 
-    click on card, pop up modal with expanded information on that employee
-    have a left/right arrow for switching between employees
-        moving right grabs next siblings information to display 
-        moving left grabs last siblings information to display
-    have a close modal button/window click to close? 
-*/
 
 function generateModal(index) {
     let {name, dob, phone, email, location: {city, street, state, postcode}, picture} = employees[index]
@@ -86,7 +73,6 @@ mainContainer.addEventListener('click', (e) => {
     }
 })
 
-
 $(document).on('click', ".modal-close", () => {
     $(".overlay").hide()
 })
@@ -103,7 +89,6 @@ $(document).on('click', '.modal-right', (e) => {
     const next = parseInt(index) + 1
     generateModal(next)
 })
-
 
 $(".search-bar").keyup(() => {
     const input = $('.search-bar').val().toLowerCase()

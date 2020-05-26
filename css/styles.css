@@ -94,6 +94,9 @@ header {
     height: 100vh;
     background-color: rgba(0, 0, 0, 0.8);
     display: none;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 }
 
 .modal-window {
@@ -111,13 +114,31 @@ header {
 }
 
 
-.close-flex {
+.modal-nav {
     display: flex;
     flex-direction: row;
-    justify-content: flex-end;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.modal-left,
+.modal-right {
+    font-size: 1.1rem;
+    margin-left: 30%;
+    font-weight: 600;
+    cursor: pointer;
+    transform: scale(1);
+    transition: .4s transform ease-out;
+}
+
+.modal-left:hover,
+.modal-right:hover {
+    color: blue;
+    transform: scale(1.5);
 }
 
 .modal-close {
+    margin-left: auto;
     cursor: pointer;
     font-weight: 600;
 }

@@ -48,7 +48,9 @@ function generateModal(index) {
     let {name, dob, phone, email, location: {city, street, state, postcode}, picture} = employees[index]
     let date = new Date(dob.date)
     const html = `
-        <div class="close-flex">
+        <div class="modal-nav">
+            <p class="modal-left"> < </p>
+            <p class="modal-right"> > </p>
             <p class="modal-close">X</p>
         </div>
         <div class="main-modal-info">
@@ -66,14 +68,14 @@ function generateModal(index) {
     modal.innerHTML = html
     modal.setAttribute('data-index', `${index}`)
     if (index == 0) {
-        $(".modal-left").hide()
+        $(".modal-left").css('visibility', 'hidden')
     } else if (index == 11) {
-        $(".modal-right").hide()
+        $(".modal-right").css('visibility', 'hidden')
     } else {
-        $(".modal-left").show()
-        $(".modal-right").show()
+        $(".modal-left").css('visibility', 'visible')
+        $(".modal-right").css('visibility', 'visible')
     }
-    modalContainer.style.display = 'block'
+    modalContainer.style.display = 'flex'
 }
 
 mainContainer.addEventListener('click', (e) => {
@@ -87,6 +89,19 @@ mainContainer.addEventListener('click', (e) => {
 
 $(document).on('click', ".modal-close", () => {
     $(".overlay").hide()
+})
+
+$(document).on('click', ".modal-left", (e) => {
+    const modal = e.target.closest('.modal-window')
+    const index = modal.getAttribute('data-index')
+    generateModal(index - 1)
+})
+
+$(document).on('click', '.modal-right', (e) => {
+    const modal = e.target.closest('.modal-window')
+    const index = modal.getAttribute('data-index')
+    const next = parseInt(index) + 1
+    generateModal(next)
 })
 
 
